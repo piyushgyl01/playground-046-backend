@@ -67,8 +67,44 @@ app.post("/models", async (req, res) => {
   try {
     const newModel = new aiModel({ name, capabilities, company });
     const savedModel = await newModel.save();
-    
-    res.status(201).json(savedModel)
+
+    res.status(201).json(savedModel);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
+
+app.put("/models/:id", async (req, res) => {
+  try {
+    const editedModel = await aiModel.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+
+    if (!editedModel) {
+      return res.status(404).json({ message: "Unable to find the model" });
+    }
+
+    res.json(editedModel);
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
+
+app.delete("/models/:id", async (req, res) => {
+  try {
+    const deletedModel = await aiModel.findByIdAndDelete(req.params.id);
+
+    if (!deletedModel) {
+      return res.status(404).json({ message: "Unable to find the model" });
+    }
+
+    res.json(deletedModel);
   } catch (error) {
     res
       .status(500)
