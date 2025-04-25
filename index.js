@@ -3,8 +3,6 @@ const app = express();
 
 const { connectDB } = require("./db/db.connect");
 
-const AIModel = require("./models/ai.model");
-
 connectDB();
 app.use(express.json());
 
