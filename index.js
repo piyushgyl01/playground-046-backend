@@ -56,6 +56,26 @@ app.get("/models/:id", async (req, res) => {
   }
 });
 
+app.post("/models", async (req, res) => {
+  const { name, capabilities, company } = req.body;
+
+  if (!name || !capabilities || !company) {
+    return res
+      .status(404)
+      .json({ message: "Please fill in all required fields" });
+  }
+  try {
+    const newModel = new aiModel({ name, capabilities, company });
+    const savedModel = await newModel.save();
+    
+    res.status(201).json(savedModel)
+  } catch (error) {
+    res
+      .status(500)
+      .json({ message: "Internal server error", error: error.message });
+  }
+});
+
 app.listen(4000, () => {
   console.log("App is listening on port 4000");
 });
